@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 
 import { router } from "expo-router";
 import { useGetSessionClientSide } from "../../contexts/AuthContext";
@@ -53,31 +60,39 @@ const SignUp = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="Email"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
-        style={styles.input}
-      />
+    <View
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+      }}
+    >
+      <View style={styles.container}>
+        <TextInput
+          placeholder="Email"
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="Password"
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-        secureTextEntry
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Password"
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          secureTextEntry
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="Confirm Password"
-        onChangeText={(text) => setConfirmPassword(text)}
-        value={confirmPassword}
-        secureTextEntry
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Confirm Password"
+          onChangeText={(text) => setConfirmPassword(text)}
+          value={confirmPassword}
+          secureTextEntry
+          style={styles.input}
+        />
 
-      {/* <RNPickerSelect
+        {/* <RNPickerSelect
         value={accountType}
         onValueChange={(value) => setAccountType(value)}
         items={[
@@ -87,16 +102,17 @@ const SignUp = () => {
         style={{ inputIOS: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16, padding: 8 } }}
       /> */}
 
-      <Button title="Submit" onPress={onFinish} disabled={loading} />
+        <Button title="Submit" onPress={onFinish} disabled={loading} />
 
-      <View style={styles.divider} />
+        <View style={styles.divider} />
 
-      <Text style={styles.loginText}>
-        If you already have an account,{" "}
-        <TouchableOpacity onPress={() => console.log("Navigate to Signin")}>
-          <Text style={{ color: "blue", fontWeight: "bold" }}>Login Now</Text>
-        </TouchableOpacity>
-      </Text>
+        <Text style={styles.loginText}>
+          If you already have an account,{" "}
+          <TouchableOpacity onPress={() => console.log("Navigate to Signin")}>
+            <Text style={{ color: "blue", fontWeight: "bold" }}>Login Now</Text>
+          </TouchableOpacity>
+        </Text>
+      </View>
     </View>
   );
 };
@@ -104,7 +120,7 @@ const SignUp = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 16,
     maxWidth: 600,
   },

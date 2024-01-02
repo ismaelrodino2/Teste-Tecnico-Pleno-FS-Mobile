@@ -17,7 +17,7 @@ interface AuthContextProps {
   authenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>; // Updated type annotation
   logout: () => void;
-  user?: User;
+  user: User | null;
 }
 
 interface AuthProviderProps {
@@ -28,7 +28,7 @@ export const AuthContext = createContext({} as AuthContextProps);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<User | null>(null);
   const navigationState = useRootNavigationState();
 
   useEffect(() => {
@@ -54,9 +54,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         );
 
+        console.log("decriptedToken", decriptedToken);
+
         const finalToken = decriptedToken.data.decodedToken;
 
-        const isLoggedIn = !!finalToken?.id;
+        const isLoggedIn = !!finalToken?.authenticated;
         setUser(finalToken);
         setAuthenticated(isLoggedIn);
       } catch (error) {
@@ -78,30 +80,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       if (data?.user) {
-        const user = await axios.get("/api/user", {
+        const user = await axios.get(`http://localhost:3000/api/user`, {
           params: {
             email: data.user.email,
           },
         });
-        console.log("user", user);
+        console.log("user1", user);
+        console.log("user2", JSON.parse(JSON.parse(user.data)));
+        console.log("user2", JSON.parse(user.data)["user"]);
+
+        const parsedUser: User = JSON.parse(JSON.parse(user.data)).user;
+
         const info = {
           authenticated: true,
-          user,
+          user: parsedUser,
         };
 
         setAuthenticated(true);
 
-        setUser(info?.user?.data?.user);
+        setUser(info.user);
+        console.log("info.user", info.user);
 
-        const token = await axios.post("/api/token", {
-          info: info?.user?.data?.user,
-        });
+        const token = await axios.post(
+          `${process.env.EXPO_PUBLIC_BASE_API_URL}/api/token`,
+          {
+            info: info,
+          }
+        );
 
-        console.log(token);
+        console.log("tokeeen", token);
+        const parsedToken = JSON.parse(token.data);
+        console.log("parsedToken", parsedToken);
 
         await AsyncStorage.setItem(
           "supabase-auth",
-          JSON.stringify(token.data.token)
+          JSON.stringify(parsedToken.encodedToken)
         );
         if (!navigationState?.key) return false;
         router.replace("/");
