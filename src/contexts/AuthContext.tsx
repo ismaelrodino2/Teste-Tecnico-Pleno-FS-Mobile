@@ -44,22 +44,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return null;
       }
 
-      const parsedToken = JSON.parse(cookies);
-
       try {
         const decriptedToken = await axios.get(
           `${process.env.EXPO_PUBLIC_BASE_API_URL}/api/token`,
           {
-            headers: { Authorization: `Bearer ${parsedToken.token}` },
+            headers: { Authorization: `Bearer ${cookies}` },
           }
         );
 
-        console.log("decriptedToken", decriptedToken);
+        console.log("decriptedToken", decriptedToken.data);
+        console.log("decriptedToken", typeof decriptedToken.data);
+        
+        const finalToken = JSON.parse(decriptedToken.data);
+        console.log("decriptedToken123", typeof finalToken.encodedToken, finalToken.encodedToken);
 
-        const finalToken = decriptedToken.data.decodedToken;
-
-        const isLoggedIn = !!finalToken?.authenticated;
-        setUser(finalToken);
+        const isLoggedIn = !!finalToken.encodedToken.authenticated;
+        setUser(finalToken.encodedToken.user);
         setAuthenticated(isLoggedIn);
       } catch (error) {
         // Lidar com erros, como token inválido, aqui
@@ -80,12 +80,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       if (data?.user) {
-        const user = await axios.get(`http://localhost:3000/api/user`, {
+        const user = await axios.get(`https://teste-tecnico-pleno-fs-frontend-backend.vercel.app/api/user`, {
           params: {
             email: data.user.email,
           },
         });
-        console.log("user1", user);
         console.log("user2", JSON.parse(JSON.parse(user.data)));
         console.log("user2", JSON.parse(user.data)["user"]);
 
@@ -108,13 +107,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         );
 
-        console.log("tokeeen", token);
-        const parsedToken = JSON.parse(token.data);
-        console.log("parsedToken", parsedToken);
+
+        console.log("Token21", token.data);
+        console.log("Token22", typeof token.data);
+        console.log("Token23", token.data.decodedToken);
+        console.log("Token24", JSON.parse(token.data).decodedToken);
+
+
 
         await AsyncStorage.setItem(
           "supabase-auth",
-          JSON.stringify(parsedToken.encodedToken)
+          JSON.parse(token.data).decodedToken        
         );
         if (!navigationState?.key) return false;
         router.replace("/");

@@ -34,7 +34,7 @@ const SignUp = () => {
       setLoading(true);
       const { data } = await supabase.auth.signUp({ email, password });
 
-      const response = await fetch("/api/user", {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/api/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

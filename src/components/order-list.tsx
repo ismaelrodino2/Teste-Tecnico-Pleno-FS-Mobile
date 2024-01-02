@@ -10,6 +10,8 @@ type Props = {
 const OrdersList = (props: Props) => {
   const allOrders = [...props.orders, ...props.incomingOrders];
 
+  console.log("allOrders", allOrders);
+
   return (
     <View>
       <Text style={styles.heading}>Adm</Text>
