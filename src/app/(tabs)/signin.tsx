@@ -8,20 +8,25 @@ import {
   StyleSheet,
 } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
+import { Link } from "expo-router";
+import { useToast } from "react-native-toast-notifications";
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const toast = useToast();
 
   const { login } = useContext(AuthContext);
 
-  const onFinish = async () => {
+  const onFinish = async() => {
     console.log({ email, password });
     try {
-      login(email, password);
+      await login(email, password);
+      toast.show("Logado!", { type: "success" });
     } catch (error) {
       console.log(error);
+      toast.show("Erro!", { type: " " });
     } finally {
       setLoading(false);
     }
@@ -33,7 +38,7 @@ const SignIn = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: '100%'
+        height: "100%",
       }}
     >
       <View style={styles.container}>
@@ -50,13 +55,18 @@ const SignIn = () => {
           secureTextEntry
           style={styles.input}
         />
-        <Button title="Submit" onPress={onFinish} disabled={loading} />
+
+        <Button
+          title={loading ? "Aguarde..." : "Cadastrar"}
+          onPress={onFinish}
+          disabled={loading}
+        />
         <View style={styles.divider} />
         <Text style={styles.signUpText}>
-          If you don't have an account,{" "}
-          <TouchableOpacity onPress={() => console.log("Navigate to Signup")}>
+          If you don't have an account,
+          <Link href="/(tabs)/signup">
             <Text style={{ color: "blue", fontWeight: "bold" }}>Sign Up</Text>
-          </TouchableOpacity>
+          </Link>
         </Text>
       </View>
     </View>

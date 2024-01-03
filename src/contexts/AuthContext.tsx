@@ -85,6 +85,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password,
       });
 
+      console.log('data',data)
+
       if (data?.user) {
         const user = await axios.get(
           `https://teste-tecnico-pleno-fs-frontend-backend.vercel.app/api/user`,
@@ -94,7 +96,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             },
           }
         );
-        console.log("user2", user.data.user);
+        console.log("user2", user);
 
         const parsedUser: User = user.data.user;
 

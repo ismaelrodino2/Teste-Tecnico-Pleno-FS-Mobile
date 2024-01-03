@@ -7,10 +7,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useGetSessionClientSide } from "../../contexts/AuthContext";
 import { supabase } from "../../lib/supabase";
+import { useToast } from "react-native-toast-notifications";
 // import RNPickerSelect from 'react-native-picker-select';
 
 const SignUp = () => {
@@ -18,23 +20,23 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [accountType, setAccountType] = useState("adm"); // Default role
+  const toast = useToast();
 
-  const session = useGetSessionClientSide();
+  // const session = useGetSessionClientSide();
 
-  useEffect(() => {
-    if (!session) {
-      console.log("asdasd", session);
-      router.replace("/signin");
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (!session) {
+  //     console.log("asdasd", session);
+  //     router.replace("/signin");
+  //   }
+  // }, [session]);
 
   const onFinish = async () => {
     try {
       setLoading(true);
       const { data } = await supabase.auth.signUp({ email, password });
 
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/api/user`, {
+      await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/api/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,17 +44,17 @@ const SignUp = () => {
         body: JSON.stringify({
           id: data.user?.id,
           email: email,
-          accountType: accountType,
+          accountType: "worker",
         }),
       });
-
-      if (response.ok) {
-        // Navigate to the sign-in screen or perform other actions as needed
-      } else {
-        // Handle registration error
-      }
+      setPassword("");
+      setEmail("");
+      setConfirmPassword("");
+      toast.show("Conta criada!", { type: "success" });
+      router.push("/(tabs)/signin");
     } catch (error) {
-      // Handle registration error
+      toast.show("Erro!", { type: "danger " });
+
       console.error(error);
     } finally {
       setLoading(false);
@@ -92,25 +94,19 @@ const SignUp = () => {
           style={styles.input}
         />
 
-        {/* <RNPickerSelect
-        value={accountType}
-        onValueChange={(value) => setAccountType(value)}
-        items={[
-          { label: 'Administrador', value: 'adm' },
-          { label: 'Trabalhador', value: 'worker' },
-        ]}
-        style={{ inputIOS: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16, padding: 8 } }}
-      /> */}
-
-        <Button title="Submit" onPress={onFinish} disabled={loading} />
+        <Button
+          title={loading ? "Aguarde..." : "Cadastrar"}
+          onPress={onFinish}
+          disabled={loading}
+        />
 
         <View style={styles.divider} />
 
         <Text style={styles.loginText}>
           If you already have an account,{" "}
-          <TouchableOpacity onPress={() => console.log("Navigate to Signin")}>
+          <Link href="/(tabs)/signin">
             <Text style={{ color: "blue", fontWeight: "bold" }}>Login Now</Text>
-          </TouchableOpacity>
+          </Link>
         </Text>
       </View>
     </View>

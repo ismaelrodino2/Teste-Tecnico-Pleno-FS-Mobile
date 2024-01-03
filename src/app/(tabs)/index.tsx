@@ -21,7 +21,7 @@ export default function HomePage() {
       <View style={styles.textContainer}>
         <Text style={styles.title}>BEM-VINDO</Text>
         <Text style={styles.subtitle}>Explore mais em nosso Dashboard.</Text>
-        <Link to="/dashboard">Ir para o Dashboard</Link>
+        <Link style={styles.buttonGoDashboard} to="/dashboard">Ir para o Dashboard</Link>
         <LogouButton />
       </View>
     </View>
@@ -29,6 +29,12 @@ export default function HomePage() {
 }
 
 const styles = StyleSheet.create({
+  buttonGoDashboard: {
+    backgroundColor: "#242424",
+    color: "#FFFFFF",
+    padding: 8,
+    borderRadius: 8
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -38,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
-    gap: 8
+    gap: 8,
   },
   title: {
     fontSize: 24,
@@ -50,12 +56,7 @@ const styles = StyleSheet.create({
     color: "gray",
     marginBottom: 16,
   },
-  button: {
-    backgroundColor: "blue", // altere a cor conforme necessário
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 20,
-  },
+
   buttonText: {
     color: "white",
     fontWeight: "bold",

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Button, View } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 
 export function LogouButton() {
@@ -10,3 +10,4 @@ export function LogouButton() {
     </View>
   );
 }
+

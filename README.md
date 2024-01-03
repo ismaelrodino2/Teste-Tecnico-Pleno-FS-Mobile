@@ -36,7 +36,8 @@ Para iniciar o projeto no frontend, siga as instruções abaixo:
   ```#!/bin/sh
   npm i
   ```
-2. Inicie o projeto (no celular ou no computador):
+2. Inicie o projeto:
   ```#!/bin/sh
-  npm start ou npm run web
+  npm start
   ```
+3. Em seu aplicativo expo, acompanhe

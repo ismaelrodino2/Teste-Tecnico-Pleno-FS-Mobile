@@ -1,9 +1,12 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
-import { Button, Text, View, Modal as RNModal, StyleSheet } from "react-native";
+import { useContext, useState } from "react";
+import { View, StyleSheet, Button } from "react-native";
+import Toast from "react-native-root-toast";
 import { User } from "../types/global-types";
 import { AuthContext } from "../contexts/AuthContext";
 import { Picker } from "@react-native-picker/picker";
+import BasicModal from "react-native-basic-modal";
+import AwesomeButton from "react-native-really-awesome-button";
 
 type Props = {
   users: User[];
@@ -24,20 +27,20 @@ export function ModalNotification(props: Props) {
 
   const onFinish = async () => {
     console.log("asdasd", user?.id, "asdasd", admId);
+    setLoading(true);
+
     try {
-      const aa = await axios.post(
+      await axios.post(
         `${process.env.EXPO_PUBLIC_BASE_API_URL}/api/notification`,
         {
           workerId: user?.id,
           admId,
         }
       );
-      console.log("123123", aa);
-      setLoading(true);
-      // notification.success({ message: "Estabelecimento notificado" });
+    
     } catch (err) {
       console.error(err);
-      // notification.error({ message: "Erro ao notificar o estabelecimento" });
+    
     } finally {
       setLoading(false);
     }
@@ -45,8 +48,50 @@ export function ModalNotification(props: Props) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Button title="Show modal" onPress={toggleModal} />
+      <Button title="Notificar Administrador" onPress={toggleModal} />
 
+      <BasicModal
+        isVisible={isModalVisible}
+        title="Notificar administrador!"
+        description="Selecione o administrador e envie uma notificação."
+        onBackdropPress={() => setModalVisible(false)}
+        headerComponent={
+          <View>
+            <Picker
+              selectedValue={admId}
+              onValueChange={(itemValue) => setAdmId(itemValue)}
+            >
+              <Picker.Item
+                label={"Selecione um estabelecimento"}
+                value={""}
+                key={""}
+              />
+
+              {props.users.length > 0 &&
+                props.users.map((adms: { email: string; id: string }) => (
+                  <Picker.Item
+                    label={adms.email}
+                    value={adms.id}
+                    key={adms.id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        }
+        footerComponent={
+          <View style={{ display: "flex", gap: 8 }}>
+            <Button onPress={onFinish} title={"Notificar"} />
+            <AwesomeButton progress={loading} onPress={onFinish}>
+              Text
+            </AwesomeButton>
+            <AwesomeButton onPress={() => setModalVisible(false)}>
+              Cancelar
+            </AwesomeButton>
+          </View>
+        }
+      />
+
+      {/* 
       <RNModal
         visible={isModalVisible}
         animationType="slide"
@@ -74,7 +119,7 @@ export function ModalNotification(props: Props) {
             title="Fechar o modal"
           />
         </View>
-      </RNModal>
+      </RNModal> */}
     </View>
   );
 }
