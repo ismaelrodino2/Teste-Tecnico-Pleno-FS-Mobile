@@ -14,7 +14,7 @@ export default function Dashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, isLoading] = useState(false);
-  const [incomingOrders, setIncomingOrders] = useState<any>([]);
+  const [incomingOrders, setIncomingOrders] = useState<Order[]>([]);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function Dashboard() {
       );
       pusher.subscribe("dashboard");
 
-      pusher.bind("incoming-order", (notification: any) =>
+      pusher.bind("incoming-order", (notification: Order[]) =>
         setIncomingOrders((prev: any) => [...prev, notification])
       );
 

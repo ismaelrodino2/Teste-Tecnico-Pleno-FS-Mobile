@@ -41,3 +41,12 @@ Para iniciar o projeto no frontend, siga as instruções abaixo:
   npm start
   ```
 3. Acompanhe no aplicativo expo go.
+
+## Testando o projeto
+
+Para testar alguns components, apenas rode:
+
+1. Instale as dependências:
+  ```#!/bin/sh
+  npm test
+  ```

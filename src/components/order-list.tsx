@@ -9,7 +9,10 @@ type Props = {
 };
 
 const SkeletonLoading = () => (
-  <View style={{ ...styles.orderContainer, backgroundColor: "white" }}>
+  <View
+    testID="skeleton-loading"
+    style={{ ...styles.orderContainer, backgroundColor: "white" }}
+  >
     <View style={styles.skeletonHeading} />
     <View style={styles.skeletonSubHeading} />
     <View style={styles.skeletonItem} />
@@ -37,7 +40,9 @@ const OrdersList = (props: Props) => {
             )}`}</Text>
           </View>
         ))}
-        {!props.orders && !props.loading ? <Text>Nenhum pedido</Text> : null}
+        {props.orders.length === 0 && !props.loading ? (
+          <Text>Nenhum pedido</Text>
+        ) : null}
         {props.loading ? <SkeletonLoading /> : null}
       </View>
     </View>
@@ -95,6 +100,5 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 });
-
 
 export default OrdersList;
