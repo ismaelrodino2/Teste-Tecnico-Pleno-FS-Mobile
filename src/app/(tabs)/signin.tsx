@@ -20,7 +20,6 @@ const SignIn = () => {
   const { login } = useContext(AuthContext);
 
   const onFinish = async() => {
-    console.log({ email, password });
     try {
       await login(email, password);
       toast.show("Logado!", { type: "success" });
@@ -57,7 +56,7 @@ const SignIn = () => {
         />
 
         <Button
-          title={loading ? "Aguarde..." : "Cadastrar"}
+          title={loading ? "Aguarde..." : "Login"}
           onPress={onFinish}
           disabled={loading}
         />

@@ -18,15 +18,11 @@ export function ModalNotification(props: Props) {
   const [admId, setAdmId] = useState("");
   const { user } = useContext(AuthContext);
 
-  console.log("props.users", props.users);
-  console.log("admId", admId);
-
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
   const onFinish = async () => {
-    console.log("asdasd", user?.id, "asdasd", admId);
     setLoading(true);
 
     try {
@@ -81,12 +77,7 @@ export function ModalNotification(props: Props) {
         footerComponent={
           <View style={{ display: "flex", gap: 8 }}>
             <Button onPress={onFinish} title={"Notificar"} />
-            <AwesomeButton progress={loading} onPress={onFinish}>
-              Text
-            </AwesomeButton>
-            <AwesomeButton onPress={() => setModalVisible(false)}>
-              Cancelar
-            </AwesomeButton>
+           
           </View>
         }
       />

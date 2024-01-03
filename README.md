@@ -40,4 +40,4 @@ Para iniciar o projeto no frontend, siga as instruções abaixo:
   ```#!/bin/sh
   npm start
   ```
-3. Em seu aplicativo expo, acompanhe
+3. Acompanhe no aplicativo expo go.

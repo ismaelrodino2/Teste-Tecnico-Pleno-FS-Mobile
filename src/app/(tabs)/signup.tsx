@@ -22,15 +22,6 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const toast = useToast();
 
-  // const session = useGetSessionClientSide();
-
-  // useEffect(() => {
-  //   if (!session) {
-  //     console.log("asdasd", session);
-  //     router.replace("/signin");
-  //   }
-  // }, [session]);
-
   const onFinish = async () => {
     try {
       setLoading(true);

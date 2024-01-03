@@ -31,18 +31,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const navigationState = useRootNavigationState();
 
-  console.log("user", user);
-
   useEffect(() => {
     const fetchData = async () => {
-      // Check if the user is already logged in based on cookies - token must be verified anyway in api call
-
       const cookies = await AsyncStorage.getItem("supabase-auth");
 
-      console.log("os cookies são...", cookies);
-
       if (!cookies) {
-        // Se o token não estiver presente, o usuário não está autenticado
         return null;
       }
 
@@ -54,15 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         );
 
-        console.log("decriptedToken", decriptedToken.data);
-        console.log("decriptedToken", typeof decriptedToken.data);
-
-        const finalToken =(decriptedToken.data);
-        console.log(
-          "decriptedToken123",
-          typeof finalToken.encodedToken,
-          finalToken.encodedToken
-        );
+        const finalToken = decriptedToken.data;
 
         const isLoggedIn = !!finalToken.decodedToken.authenticated;
         setUser(finalToken.decodedToken.user);
@@ -78,14 +63,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     // Perform login logic, set authenticated to true
-    console.log("teste", email, password);
     try {
       const { data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
-      console.log('data',data)
 
       if (data?.user) {
         const user = await axios.get(
@@ -96,7 +78,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             },
           }
         );
-        console.log("user2", user);
 
         const parsedUser: User = user.data.user;
 
@@ -108,7 +89,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setAuthenticated(true);
 
         setUser(info.user);
-        console.log("info.user", info.user);
 
         const token = await axios.post(
           `${process.env.EXPO_PUBLIC_BASE_API_URL}/api/token`,
@@ -117,14 +97,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         );
 
-        console.log("Token21", token.data);
-        console.log("Token22", typeof token.data);
-        console.log("Token23", token.data.encodedToken);
-
-        await AsyncStorage.setItem(
-          "supabase-auth",
-          token.data.encodedToken
-        );
+        await AsyncStorage.setItem("supabase-auth", token.data.encodedToken);
         if (!navigationState?.key) return false;
         router.replace("/");
         return true; // Return true to indicate successful login

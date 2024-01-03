@@ -3,25 +3,23 @@ import { Link } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { useGetSessionClientSide } from "../../contexts/AuthContext";
 import { LogouButton } from "../../components/logout-button";
+import { Redirect } from "expo-router";
 
 export default function HomePage() {
-  // você pode adaptar a lógica do useGetSessionServerSide para o ambiente React Native
-
   const session = useGetSessionClientSide();
 
-  // useEffect(() => {
-  //   if (!session) {
-  //     console.log("asdasd", session);
-  //     router.push("/");
-  //   }
-  // }, [session]);
+  if (!session) {
+    return <Redirect href="/(tabs)/signin" />;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.title}>BEM-VINDO</Text>
         <Text style={styles.subtitle}>Explore mais em nosso Dashboard.</Text>
-        <Link style={styles.buttonGoDashboard} to="/dashboard">Ir para o Dashboard</Link>
+        <Link style={styles.buttonGoDashboard} to="/dashboard">
+          Ir para o Dashboard
+        </Link>
         <LogouButton />
       </View>
     </View>
@@ -33,7 +31,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#242424",
     color: "#FFFFFF",
     padding: 8,
-    borderRadius: 8
+    borderRadius: 8,
   },
   container: {
     flex: 1,
