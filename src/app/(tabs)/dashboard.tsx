@@ -11,26 +11,38 @@ import {
   useGetSessionClientSide,
 } from "../../contexts/AuthContext";
 import Pusher from "pusher-js/react-native";
+import { LogouButton } from "../../components/logout-button";
+import { ModalNotification } from "../../components/modal";
 
 export default function Dashboard() {
-  const [isModalVisible, setModalVisible] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const { user } = useContext(AuthContext);
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+
   const [incomingOrders, setIncomingOrders] = useState<any>([]);
+
+  console.log('o user é', user?.id)
 
   const fetchData = async () => {
     try {
-  
+
+      const usersData = await axios.get(
+        `${process.env.EXPO_PUBLIC_BASE_API_URL}/api/user`,
+        {
+          params: {
+            accountType: "adm",
+          },
+        }
+      );
+      console.log('os users são', usersData.data.users)
+      setUsers(usersData.data.users)
       console.log("user?.id", user?.id);
       const ordersData = await axios.get(
         `${process.env.EXPO_PUBLIC_BASE_API_URL}/api/order`,
         {
           params: {
-            workerId: "450bd6a6-912a-41eb-9900-d7cc9033eff5",
+            workerId: user?.id,
             // workerId: user?.id,
           },
         }
@@ -39,10 +51,13 @@ export default function Dashboard() {
       console.log("aaaa", (ordersData.data.orders));
 
       setOrders(ordersData.data.orders); // Atualiza o estado com os dados da API
+      console.log("23112312", (ordersData.data.orders));
+
     } catch (error) {
       console.error("Erro ao buscar dados da API:", error);
     }
   };
+  console.log("1112222", (orders));
 
   useEffect(() => {
     fetchData();
@@ -74,13 +89,9 @@ export default function Dashboard() {
 
       <OrdersList orders={orders} incomingOrders={incomingOrders} />
 
-      <Button title="Notificar estabelecimento" onPress={toggleModal} />
 
-      <Modal isVisible={true}>
-        <View style={{ flex: 1 }}>
-          <Text>I am the modal content!</Text>
-        </View>
-      </Modal>
+      <ModalNotification users={users} />
+      <LogouButton />
     </View>
   );
 }

@@ -31,6 +31,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const navigationState = useRootNavigationState();
 
+  console.log("user", user);
+
   useEffect(() => {
     const fetchData = async () => {
       // Check if the user is already logged in based on cookies - token must be verified anyway in api call
@@ -54,12 +56,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         console.log("decriptedToken", decriptedToken.data);
         console.log("decriptedToken", typeof decriptedToken.data);
-        
-        const finalToken = JSON.parse(decriptedToken.data);
-        console.log("decriptedToken123", typeof finalToken.encodedToken, finalToken.encodedToken);
 
-        const isLoggedIn = !!finalToken.encodedToken.authenticated;
-        setUser(finalToken.encodedToken.user);
+        const finalToken =(decriptedToken.data);
+        console.log(
+          "decriptedToken123",
+          typeof finalToken.encodedToken,
+          finalToken.encodedToken
+        );
+
+        const isLoggedIn = !!finalToken.decodedToken.authenticated;
+        setUser(finalToken.decodedToken.user);
         setAuthenticated(isLoggedIn);
       } catch (error) {
         // Lidar com erros, como token inválido, aqui
@@ -80,15 +86,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       if (data?.user) {
-        const user = await axios.get(`https://teste-tecnico-pleno-fs-frontend-backend.vercel.app/api/user`, {
-          params: {
-            email: data.user.email,
-          },
-        });
-        console.log("user2", JSON.parse(JSON.parse(user.data)));
-        console.log("user2", JSON.parse(user.data)["user"]);
+        const user = await axios.get(
+          `https://teste-tecnico-pleno-fs-frontend-backend.vercel.app/api/user`,
+          {
+            params: {
+              email: data.user.email,
+            },
+          }
+        );
+        console.log("user2", user.data.user);
 
-        const parsedUser: User = JSON.parse(JSON.parse(user.data)).user;
+        const parsedUser: User = user.data.user;
 
         const info = {
           authenticated: true,
@@ -107,17 +115,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         );
 
-
         console.log("Token21", token.data);
         console.log("Token22", typeof token.data);
-        console.log("Token23", token.data.decodedToken);
-        console.log("Token24", JSON.parse(token.data).decodedToken);
-
-
+        console.log("Token23", token.data.encodedToken);
 
         await AsyncStorage.setItem(
           "supabase-auth",
-          JSON.parse(token.data).decodedToken        
+          token.data.encodedToken
         );
         if (!navigationState?.key) return false;
         router.replace("/");
@@ -135,8 +139,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Perform logout logic, set authenticated to false
     await supabase.auth.signOut();
     setAuthenticated(false);
+    setUser(null);
     await AsyncStorage.removeItem("supabase-auth");
-    window.location.reload();
+    router.push("/(tabs)/signin");
   };
 
   return (

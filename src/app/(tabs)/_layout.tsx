@@ -1,5 +1,11 @@
 import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { Button, View } from "react-native";
+import { LogouButton } from "../../components/logout-button";
+
+
+
+
 
 export default function () {
   return (
@@ -41,6 +47,7 @@ export default function () {
           tabBarLabel: "Cadastrar",
         }}
       />
+
     </Tabs>
   );
 }

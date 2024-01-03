@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Link } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { useGetSessionClientSide } from "../../contexts/AuthContext";
+import { LogouButton } from "../../components/logout-button";
 
 export default function HomePage() {
   // você pode adaptar a lógica do useGetSessionServerSide para o ambiente React Native
@@ -21,6 +22,7 @@ export default function HomePage() {
         <Text style={styles.title}>BEM-VINDO</Text>
         <Text style={styles.subtitle}>Explore mais em nosso Dashboard.</Text>
         <Link to="/dashboard">Ir para o Dashboard</Link>
+        <LogouButton />
       </View>
     </View>
   );
@@ -34,6 +36,9 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    gap: 8
   },
   title: {
     fontSize: 24,
