@@ -1,11 +1,21 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Order } from "../types/global-types";
 
 type Props = {
   orders: Order[];
   incomingOrders: Order[];
+  loading: boolean;
 };
+
+const SkeletonLoading = () => (
+  <View style={{ ...styles.orderContainer, backgroundColor: "white" }}>
+    <View style={styles.skeletonHeading} />
+    <View style={styles.skeletonSubHeading} />
+    <View style={styles.skeletonItem} />
+    <View style={styles.skeletonItem} />
+  </View>
+);
 
 const OrdersList = (props: Props) => {
   const allOrders = [...props.orders, ...props.incomingOrders];
@@ -27,6 +37,8 @@ const OrdersList = (props: Props) => {
             )}`}</Text>
           </View>
         ))}
+        {!props.orders && !props.loading ? <Text>Nenhum pedido</Text> : null}
+        {props.loading ? <SkeletonLoading /> : null}
       </View>
     </View>
   );
@@ -67,6 +79,22 @@ const styles = StyleSheet.create({
   orderItems: {
     color: "gray",
   },
+  skeletonHeading: {
+    height: 24,
+    backgroundColor: "lightgray",
+    marginBottom: 8,
+  },
+  skeletonSubHeading: {
+    height: 18,
+    backgroundColor: "lightgray",
+    marginBottom: 2,
+  },
+  skeletonItem: {
+    height: 16,
+    backgroundColor: "lightgray",
+    marginBottom: 4,
+  },
 });
+
 
 export default OrdersList;

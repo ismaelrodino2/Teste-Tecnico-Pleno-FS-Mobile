@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   Button,
-  TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import Toast from "react-native-toast-message";
 
 import { Link, router } from "expo-router";
-import { useGetSessionClientSide } from "../../contexts/AuthContext";
 import { supabase } from "../../lib/supabase";
 import { useToast } from "react-native-toast-notifications";
-// import RNPickerSelect from 'react-native-picker-select';
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +19,16 @@ const SignUp = () => {
   const toast = useToast();
 
   const onFinish = async () => {
+    if (password.length < 6) {
+      return toast.show("Por favor, senha com mais de 6 caracteres.", {
+        type: "danger",
+      });
+    }
+    if (password !== confirmPassword) {
+      return toast.show("As senhas não são iguais.", {
+        type: "danger",
+      });
+    }
     try {
       setLoading(true);
       const { data } = await supabase.auth.signUp({ email, password });
@@ -44,7 +50,7 @@ const SignUp = () => {
       toast.show("Conta criada!", { type: "success" });
       router.push("/(tabs)/signin");
     } catch (error) {
-      toast.show("Erro!", { type: "danger " });
+      toast.show("Erro!", { type: "danger" });
 
       console.error(error);
     } finally {
@@ -94,9 +100,9 @@ const SignUp = () => {
         <View style={styles.divider} />
 
         <Text style={styles.loginText}>
-          If you already have an account,{" "}
+        Se você já possui uma conta,
           <Link href="/(tabs)/signin">
-            <Text style={{ color: "blue", fontWeight: "bold" }}>Login Now</Text>
+            <Text style={{ color: "blue", fontWeight: "bold", padding: 4 }}>Autentique-se agora</Text>
           </Link>
         </Text>
       </View>

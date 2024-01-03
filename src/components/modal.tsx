@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { View, StyleSheet, Button } from "react-native";
+import { View, StyleSheet, Button, Pressable, Text } from "react-native";
 import Toast from "react-native-root-toast";
 import { User } from "../types/global-types";
 import { AuthContext } from "../contexts/AuthContext";
@@ -33,10 +33,8 @@ export function ModalNotification(props: Props) {
           admId,
         }
       );
-    
     } catch (err) {
       console.error(err);
-    
     } finally {
       setLoading(false);
     }
@@ -51,81 +49,56 @@ export function ModalNotification(props: Props) {
         title="Notificar administrador!"
         description="Selecione o administrador e envie uma notificação."
         onBackdropPress={() => setModalVisible(false)}
-        headerComponent={
-          <View>
-            <Picker
-              selectedValue={admId}
-              onValueChange={(itemValue) => setAdmId(itemValue)}
-            >
-              <Picker.Item
-                label={"Selecione um estabelecimento"}
-                value={""}
-                key={""}
-              />
-
-              {props.users.length > 0 &&
-                props.users.map((adms: { email: string; id: string }) => (
-                  <Picker.Item
-                    label={adms.email}
-                    value={adms.id}
-                    key={adms.id}
-                  />
-                ))}
-            </Picker>
-          </View>
-        }
-        footerComponent={
-          <View style={{ display: "flex", gap: 8 }}>
-            <Button onPress={onFinish} title={"Notificar"} />
-           
-          </View>
-        }
-      />
-
-      {/* 
-      <RNModal
-        visible={isModalVisible}
-        animationType="slide"
-        // onBackdropPress={toggleModal}
-        style={styles.modalContainer}
       >
-        <View style={styles.modalContent}>
-          <Text>Selecione o estabelecimento!</Text>
-
+        <View>
           <Picker
             selectedValue={admId}
             onValueChange={(itemValue) => setAdmId(itemValue)}
-            
           >
-            <Picker.Item label={"Selecione um estabelecimento"} value={""} key={""} />
+            <Picker.Item
+              label={"Selecione um estabelecimento"}
+              value={""}
+              key={""}
+            />
 
             {props.users.length > 0 &&
               props.users.map((adms: { email: string; id: string }) => (
                 <Picker.Item label={adms.email} value={adms.id} key={adms.id} />
               ))}
           </Picker>
-          <Button onPress={onFinish} title="Notificar" />
-          <Button
-            onPress={() => setModalVisible(false)}
-            title="Fechar o modal"
-          />
+          <View style={{ display: "flex", gap: 8 }}>
+            <Pressable
+              style={styles.button}
+              onPress={onFinish}
+              disabled={loading}
+            >
+              <Text style={styles.text}>
+                {loading ? "Carregando..." : "Notificar"}
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </RNModal> */}
+      </BasicModal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    justifyContent: "flex-end",
-    margin: 0,
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderBottomLeftRadius: 16,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "#14ACF2",
   },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: "70%", // Defina a largura desejada aqui
-    height: "70%", // Defina a altura desejada aqui
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
   },
 });

@@ -19,9 +19,13 @@ const SignIn = () => {
 
   const { login } = useContext(AuthContext);
 
-  const onFinish = async() => {
+  const onFinish = async () => {
+    setLoading(true);
+
     try {
       await login(email, password);
+      setEmail("");
+      setPassword("");
       toast.show("Logado!", { type: "success" });
     } catch (error) {
       console.log(error);
@@ -62,9 +66,11 @@ const SignIn = () => {
         />
         <View style={styles.divider} />
         <Text style={styles.signUpText}>
-          If you don't have an account,
+          Se você ainda não possui uma conta,
           <Link href="/(tabs)/signup">
-            <Text style={{ color: "blue", fontWeight: "bold" }}>Sign Up</Text>
+            <Text style={{ color: "blue", fontWeight: "bold", paddingLeft: 4 }}>
+              Cadastre-se
+            </Text>
           </Link>
         </Text>
       </View>

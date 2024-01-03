@@ -16,7 +16,7 @@ import { supabase } from "../lib/supabase";
 interface AuthContextProps {
   authenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>; // Updated type annotation
-  logout: () => void;
+  logout: () => Promise<void>;
   user: User | null;
 }
 

@@ -4,8 +4,8 @@ import { ToastProvider } from "react-native-toast-notifications";
 
 const RootLayout = () => {
   return (
-      <ToastProvider>
-    <AuthProvider>
+    <ToastProvider>
+      <AuthProvider>
         <Stack>
           <Stack.Screen
             name="(tabs)"
@@ -14,8 +14,8 @@ const RootLayout = () => {
             }}
           />
         </Stack>
-    </AuthProvider>
-      </ToastProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 };
 

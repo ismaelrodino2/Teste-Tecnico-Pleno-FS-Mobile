@@ -6,7 +6,7 @@ export function LogouButton() {
   const { logout } = useContext(AuthContext);
   return (
     <View>
-      <Button title="Logout" onPress={() => logout()} />
+      <Button title="Logout" onPress={logout} />
     </View>
   );
 }
